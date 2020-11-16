@@ -30,7 +30,7 @@ pl = Pipeline( pipeline = [
                            ("func2", 1, 2, {kwarg = -1})                 # Second call
                           ]
                           
-# Apply pipeline
+# Step3: Apply pipeline
 new_x = pl(x)
 ```
 
