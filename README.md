@@ -25,11 +25,17 @@ def func2(x, arg1, arg2, kwarg=-1):
 pl = Pipeline()
 pl.FUNCTIONS_PIPELINE # contains 'func1' and 'func2' as callables
 
+# Option1: initialize with pipeline
 pl = Pipeline( pipeline = [
                            ("func1", 1, {kwarg1 = 0, kwarg2 = 1}),       # First call
                            ("func2", 1, 2, {kwarg = -1})                 # Second call
                           ]
-                          
+
+# Option2: Initialize with empty pipeline, add functions one by one
+pl = Pipeline()
+pl > ("func1", 1, {kwarg1 = 0, kwarg2 = 1}) # First call
+pl > ("func2", 1, 2, {kwarg = -1})          # Second call
+
 # Step3: Apply pipeline
 new_x = pl(x)
 ```
