@@ -35,15 +35,17 @@ new_x = pl(x)
 ```
 
 ### `MonitorValues`
+Useful to create a table in an easy way
 
 ```python
+from itertools import zip_longest
 from monitor_values import MonitorValues
 
 # Instantiate MonitorValues with the desired variables to monitor as strings in a list or tuple
 mv = MonitorValues(['x','y','z'])
 
-for x,y,z in zip(range(3),range(4),range(5)): 
-  # Call the class to monitor the values
+for x,y,z in zip_longest(range(3),range(4),range(5)): 
+  # Call the instance class to monitor the values
   mv()
   
 # Results
@@ -72,7 +74,7 @@ from data_selector import DataSelector
 # Initialize data selector with labels
 ds = DataSelector(id_labels = range(100), labels = [0]*50 + [1]*50)
 
-# Generate train, test, val sets
+# 1. Generate train, test, val sets
 ds(train_size = 0.8) #  -> test_size = val_size = 0.1
 # > Generating train, validation and test sets...
 # > Datasets successfully generated. See 'datasets' attribute.
@@ -80,4 +82,21 @@ ds(train_size = 0.8) #  -> test_size = val_size = 0.1
 
 # See results
 ds.datasets
+
+# 2. Generate train, val, test sets balanced_on some variable
+sex = ["M"]*20 + ["F"]*80
+ds(train_size = 0.8,  balanced_on = sex)
+# > Generating train, validation and test sets...
+# > Datasets successfully generated. See 'datasets' attribute.
+# > {'train': {1: 40, 0: 40}, 'val': {0: 4, 1: 6}, 'test': {0: 6, 1: 4}}
+
+# Distribution of variable 'sex' in datasets generated
+ds._get_summary_var(sex)
+# > {'train': {'F': 64, 'M': 16}, 'val': {'F': 8, 'M': 2}, 'test': {'F': 8, 'M': 2}}
+
+Extra (in progress)
+```python
+# 2. Generate train, val, test sets exclusive_on some variable
+ds(train_size = 0.8, exclusive_on = sex)
 ```
+`exclusive_on` should be use with variables like ID. Example, Patient-ID, RUT, DNI, or something that you consider that cannot belong to more than one set.
