@@ -35,7 +35,7 @@ new_x = pl(x)
 ```
 
 ### `MonitorValues`
-Useful to create a table in an easy way
+Useful to create a table in an easy way. 
 
 ```python
 from itertools import zip_longest
@@ -43,6 +43,9 @@ from monitor_values import MonitorValues
 
 # Instantiate MonitorValues with the desired variables to monitor as strings in a list or tuple
 mv = MonitorValues(['x','y','z'])
+
+# What happens if variables to be monitored does not exists yet? 'None' will be assing
+mv()
 
 for x,y,z in zip_longest(range(3),range(4),range(5)): 
   # Call the instance class to monitor the values
@@ -53,11 +56,12 @@ mv.get_values() # List with namedtuples of all monitored values
 mv.get_values_asdf() # Same before as Pandas DataFrame
 
 #                  timestamp    x    y  z
-#0  Mon Nov 16 13:37:32 2020  0.0  0.0  0
-#1  Mon Nov 16 13:37:32 2020  1.0  1.0  1
-#2  Mon Nov 16 13:37:32 2020  2.0  2.0  2
-#3  Mon Nov 16 13:37:32 2020  NaN  3.0  3
-#4  Mon Nov 16 13:37:32 2020  NaN  NaN  4   # -> NaN means no value is available for the variable when is monitored
+#0  Mon Nov 16 13:37:32 2020  NaN  NaN  NaN    # 'NaN' -> 'None' in mv.get_values()
+#1  Mon Nov 16 13:37:32 2020  0.0  0.0  0
+#2  Mon Nov 16 13:37:32 2020  1.0  1.0  1
+#3  Mon Nov 16 13:37:32 2020  2.0  2.0  2
+#4  Mon Nov 16 13:37:32 2020  NaN  3.0  3
+#5  Mon Nov 16 13:37:32 2020  NaN  NaN  4 
 
 mv.to_excel("path/to/save.xlsx") # Save as excel
 mv.to_csv("path/to/save.csv") # Save as csv
