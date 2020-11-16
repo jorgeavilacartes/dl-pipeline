@@ -97,6 +97,7 @@ ds(train_size = 0.8,  balanced_on = sex)
 # Distribution of variable 'sex' in datasets generated
 ds._get_summary_var(sex)
 # > {'train': {'F': 64, 'M': 16}, 'val': {'F': 8, 'M': 2}, 'test': {'F': 8, 'M': 2}}
+```
 
 Extra (in progress)
 ```python
