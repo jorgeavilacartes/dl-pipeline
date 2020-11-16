@@ -12,12 +12,12 @@ from pipeline import Pipeline
 
 # Step1: register functions to use with the Pipeline class
 @register_in_pipeline
-def func1(x, arg1, kwarg1=0, kwargs2=1):
+def func1(x, arg, kwarg1=0, kwargs2=1):
   # Do something with 'x'
   return x
 
 @register_in_pipeline
-def func2(x, arg1, arg2, kwarg3=-1):
+def func2(x, arg1, arg2, kwarg=-1):
   # Do something with 'x'
   return x
 
@@ -26,9 +26,12 @@ pl = Pipeline()
 pl.FUNCTIONS_PIPELINE # contains 'func1' and 'func2' as callables
 
 pl = Pipeline( pipeline = [
-                           ("func1", 1, {kwarg1 = 0, kwarg2 = 1, kwarg3 = -1}),       # First call
-                           ("func2", 1, 2, {kwarg1 = 0, kwarg2 = 1, kwarg3 = -1})     # Second call
+                           ("func1", 1, {kwarg1 = 0, kwarg2 = 1}),       # First call
+                           ("func2", 1, 2, {kwarg = -1})                 # Second call
                           ]
+                          
+# Apply pipeline
+new_x = pl(x)
 ```
 
 ### `MonitorValues`
@@ -46,6 +49,14 @@ for x,y,z in zip(range(3),range(4),range(5)):
 # Results
 mv.get_values() # List with namedtuples of all monitored values
 mv.get_values_asdf() # Same before as Pandas DataFrame
+
+#                  timestamp    x    y  z
+#0  Mon Nov 16 13:37:32 2020  0.0  0.0  0
+#1  Mon Nov 16 13:37:32 2020  1.0  1.0  1
+#2  Mon Nov 16 13:37:32 2020  2.0  2.0  2
+#3  Mon Nov 16 13:37:32 2020  NaN  3.0  3
+#4  Mon Nov 16 13:37:32 2020  NaN  NaN  4   # -> NaN means no value is available for the variable when is monitored
+
 mv.to_excel("path/to/save.xlsx") # Save as excel
 mv.to_csv("path/to/save.csv") # Save as csv
 ```
