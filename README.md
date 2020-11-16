@@ -34,6 +34,15 @@ pl = Pipeline( pipeline = [
 new_x = pl(x)
 ```
 
+Useful features: save and load pipeline from JSON
+```python
+# Save pipeline
+pl.asJSON("path/to/my/pipeline.json")
+
+# Load pipeline
+pl.fromJSON("path/to/my/pipeline.json")
+```
+
 ### `MonitorValues`
 Useful to create a table in an easy way. 
 
