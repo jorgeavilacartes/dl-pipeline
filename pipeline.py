@@ -22,7 +22,7 @@ class Pipeline:
         """Apply pipeline to the input 'x'"""
         for pipe in self.pipeline: 
             func_name, *args, kwargs = pipe
-            assert isinstance(kwargs, dict), f"Wrong declaration in {func_name!r}. Must be (callable, dict) or (str, tuple, dict)"
+            assert isinstance(kwargs, dict), f"Wrong declaration in {func_name!r}. Must be (str, dict) or (str, tuple, dict)"
             # apply preprocessing
             if args: 
                 print("args and kwargs")
