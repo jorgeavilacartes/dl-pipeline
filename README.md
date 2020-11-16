@@ -78,7 +78,7 @@ mv.to_csv("path/to/save.csv") # Save as csv
 
 ### `DataSelector`
 Get train, val and test sets. 
-- Balanced on some variable 
+- Balanced on some variable (by default is balanced on `labels` input)
 - Exlusive on some variable
 
 ```python
