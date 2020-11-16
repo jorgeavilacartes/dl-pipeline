@@ -1,40 +1,13 @@
 import os
-import cv2
 import time
+from collections import namedtuple
+from typing import List, NamedTuple, Optional
+
+import cv2
 import numpy as np
 
-from collections import namedtuple
-from typing import List, Optional,NamedTuple
-from pydantic import BaseModel
-
-class SummarizeScanner:
-
-    def summarize(self, list_scanner: List[NamedTuple]):
-        pass
-
-    def plot_metric(self, metric: str, list_scanner: List[NamedTuple]):
-        pass
-
-    def __plot_mean(self,):
-        pass
-    
-    def __plot_std(self,):
-        pass
-
-    def __plot_min(self,):
-        pass
-
-    def __plot_max(self,):
-        pass
-
-    def __plot_median(self,):
-        pass
-
-    def __plot_shape(self,):
-        pass
-
-class ImageScanner(SummarizeScanner):
-    #__slots__ = ["metrics","list_scanner","ImgStats","axis","n_calls"]
+class ImageScanner:
+    __slots__ = ["metrics","list_scanner","ImgStats","axis","n_calls"]
     def __init__(self, 
         metrics: List[str] = ["img_id","shape","min","mean","std","max","median"],
         on_axis: int = 2
@@ -89,9 +62,9 @@ class ImageScanner(SummarizeScanner):
         else:
             raise Exception("File does not exists")
         
-    def __getitem__(self, number):
-        """Get the number-esim monitored value"""
-        return self.list_scanner[int(number)]
+    def __getitem__(self, n):
+        """Get the n-esim monitored value"""
+        return self.list_scanner[int(n)]
 
     def __len__(self,):
         """Get number of scanned images"""
