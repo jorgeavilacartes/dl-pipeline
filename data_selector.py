@@ -11,7 +11,7 @@ from sklearn.model_selection import train_test_split
 VarIdSet = namedtuple("VarIdSet", ["var","id","set"])
 
 class DataSelector:
-
+    """Get train, val and test sets"""
     def __init__(self,
                     id_labels: List[Union[str,int]], 
                     labels: List[Union[str,int]],
@@ -106,7 +106,45 @@ class DataSelector:
                     for ds in ["train","val","test"]
                 }
 
+    def __tuples_var_id_set(self, list_var: List[Union[str,int]]) -> List[NamedTuple]:
+        # For datasets_mutually_exclusive_on
+        """Generate namedtuples with VarIdSet(var, id, set)
+        var : element of 'list_var'
+        id  : the corresponding index in attribute _id_datasets for the element var
+        set : the set where the element 'var' belongs (either 'train', 'test' or 'val')
+        """
+        #TODO: usar namedtuple
+        new_list = []
+        # Reorder list_var in train, test and val sets
+        distribution_var = self._split_var_on_datasets(list_var)
+        for set_ in ["train","test","val"]:
+            set_dist = distribution_var.get(set_)
+            set_id   = self._id_datasets.get(set_)
+            new_list.extend([VarIdSet(var_, id_, set_) for var_, id_ in zip(set_dist,set_id)])
+        return new_list
+
+    def load_id_datasets(self, _id_datasets: Dict[str, List[int]]):
+        """Cargar los id de los datasets desde un diccionario
+        Util para reordenar una asignacion ya hecha.
+        _id_datasets debe contener las llaves "train", "val" y "test"
+        """
+        assert all([set_ in ["train","test","val"] for set_ in _id_datasets.keys()])
+        self._id_datasets = _id_datasets
+        
+        # Assing id_labels and  labels to train, test and val sets
+        self.__update_datasets()
+
+    def __update_datasets(self,):
+        """Assing id_labels and labels to train, test and val sets
+        based on attribute _id_datasets"""
+        # id_labels and labels distributed in train, val and test sets
+        self.datasets["id_labels"] = self._split_var_on_datasets(self.id_labels)
+        self.datasets["labels"]    = self._split_var_on_datasets(self.labels)
+
+
+#FIXME: From here, work in progress ------------------------------------------------------------------
     def datasets_mutually_exclusive_on(self, exclusive_on: List[Union[str,int]]) -> Dict[str,int]:
+        #TODO: find a better approach to do this
         """Redefine train, val, test datasets based on exclusive_on list.
         Each unique element of exclusive_on will be in only one set (either train, val or test)
         """
@@ -157,38 +195,3 @@ class DataSelector:
             # If there exists only one element 
                 new_assign.extend(list_var)
         return new_assign
-
-    def __tuples_var_id_set(self, list_var: List[Union[str,int]]) -> List[NamedTuple]:
-        # For datasets_mutually_exclusive_on
-        """Generate namedtuples with VarIdSet(var, id, set)
-        var : element of 'list_var'
-        id  : the corresponding index in attribute _id_datasets for the element var
-        set : the set where the element 'var' belongs (either 'train', 'test' or 'val')
-        """
-        #TODO: usar namedtuple
-        new_list = []
-        # Reorder list_var in train, test and val sets
-        distribution_var = self._split_var_on_datasets(list_var)
-        for set_ in ["train","test","val"]:
-            set_dist = distribution_var.get(set_)
-            set_id   = self._id_datasets.get(set_)
-            new_list.extend([VarIdSet(var_, id_, set_) for var_, id_ in zip(set_dist,set_id)])
-        return new_list
-
-    def load_id_datasets(self, _id_datasets: Dict[str, List[int]]):
-        """Cargar los id de los datasets desde un diccionario
-        Util para reordenar una asignacion ya hecha.
-        _id_datasets debe contener las llaves "train", "val" y "test"
-        """
-        assert all([set_ in ["train","test","val"] for set_ in _id_datasets.keys()])
-        self._id_datasets = _id_datasets
-        
-        # Assing id_labels and  labels to train, test and val sets
-        self.__update_datasets()
-
-    def __update_datasets(self,):
-        """Assing id_labels and labels to train, test and val sets
-        based on attribute _id_datasets"""
-        # id_labels and labels distributed in train, val and test sets
-        self.datasets["id_labels"] = self._split_var_on_datasets(self.id_labels)
-        self.datasets["labels"]    = self._split_var_on_datasets(self.labels)

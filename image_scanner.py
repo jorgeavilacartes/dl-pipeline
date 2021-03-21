@@ -7,6 +7,7 @@ import cv2
 import numpy as np
 
 class ImageScanner:
+    """Get basic statistics over a bunch of images"""
     __slots__ = ["metrics","list_scanner","ImgStats","axis","n_calls"]
     def __init__(self, 
         metrics: List[str] = ["img_id","shape","min","mean","std","max","median"],
